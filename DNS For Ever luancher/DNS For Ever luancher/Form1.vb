@@ -84,11 +84,16 @@ Public Class Form1
                     Try
                         My.Computer.Network.DownloadFile(location, tempFiles & name)
                         ziplocation = tempFiles & name
-                        unzip(ziplocation, ziplocation)
-                        If IO.File.Exists(ziplocation) Then
-                            IO.Directory.Delete(ziplocation)
+                        If unzip(ziplocation, ziplocation) Then
+                            If IO.File.Exists(ziplocation) Then
+                                IO.Directory.Delete(ziplocation)
+                            End If
+                            MsgBox("file downloaded and unziped")
+                        Else
+                            log.Log1.Items.Add("Error in Unziping file " & ziplocation)
+                            MsgBox("Could not unZip " & name)
                         End If
-                        MsgBox("file downloaded and unziped")
+
                     Catch ex As Exception
                         log.Log1.Items.Add("Exception: " & ex.ToString)
                     End Try
@@ -120,7 +125,7 @@ Public Class Form1
             End Try
         End If
     End Sub
-    Sub unzip(ByVal ziplocation As String, ByVal endfile As String)
+    Function unzip(ByVal ziplocation As String, ByVal endfile As String) As Boolean
         Try
             Using zip As ZipFile = ZipFile.Read(ziplocation)
                 Dim entry As ZipEntry
@@ -130,10 +135,12 @@ Public Class Form1
                     System.Threading.Thread.Sleep(20)
                 Next
             End Using
+            Return True
         Catch ex1 As Exception
             log.Log1.Items.Add("Exception in unzip: " & ex1.ToString)
+            Return False
         End Try
-    End Sub
+    End Function
 #End Region
 
     Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
