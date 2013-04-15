@@ -51,13 +51,21 @@ Public Class Form1
         GetUserName = userName.Substring(0, userName.IndexOf(Chr(0)))
     End Function
     Sub download()
-        Dim downloadlist As String
+        Dim downloadlist As String = tempFiles & "mage.txt"
         Dim location As String
         Dim name As String
         Dim zipYN As String
         Dim ziplocation As String
-        My.Computer.Network.DownloadFile("http://mage-tech.org/mage.txt", "C:\DNS-Temp\mage.txt")
-        downloadlist = tempFiles & "mage.txt"
+        If IO.File.Exists(tempFiles & "mage.txt") = False Then
+            My.Computer.Network.DownloadFile("http://mage-tech.org/mage.txt", "C:\DNS-Temp\mage.txt")
+        Else
+            Try
+                IO.File.Delete(tempFiles & "mage.txt")
+                My.Computer.Network.DownloadFile("http://mage-tech.org/mage.txt", tempFiles & "mage.txt")
+            Catch ex As Exception
+                log.Log1.Items.Add("Exception: " & ex.ToString)
+            End Try
+        End If
         If System.IO.File.Exists(downloadlist) = True Then
             Dim objReader As New System.IO.StreamReader(downloadlist)
             Do While objReader.Peek() <> -1
@@ -66,20 +74,29 @@ Public Class Form1
                 zipYN = objReader.ReadLine() & vbNewLine
                 zipYN = zipYN.Trim
                 If zipYN = "no" Then
-                    My.Computer.Network.DownloadFile(location, tempFiles & name)
-                    MsgBox("file downloaded")
+                    Try
+                        My.Computer.Network.DownloadFile(location, tempFiles & name)
+                        MsgBox("file downloaded")
+                    Catch ex As Exception
+                        log.Log1.Items.Add("Exception: " & ex.ToString)
+                    End Try
                 ElseIf zipYN = "yes" Then
-                    My.Computer.Network.DownloadFile(location, tempFiles & name)
-                    ziplocation = tempFiles & name
-                    unzip(ziplocation, ziplocation)
-                    If IO.File.Exists(ziplocation) Then
-                        IO.Directory.Delete(ziplocation)
-                    End If
-                    MsgBox("file downloaded and unziped")
+                    Try
+                        My.Computer.Network.DownloadFile(location, tempFiles & name)
+                        ziplocation = tempFiles & name
+                        unzip(ziplocation, ziplocation)
+                        If IO.File.Exists(ziplocation) Then
+                            IO.Directory.Delete(ziplocation)
+                        End If
+                        MsgBox("file downloaded and unziped")
+                    Catch ex As Exception
+                        log.Log1.Items.Add("Exception: " & ex.ToString)
+                    End Try
+
                 End If
             Loop
         Else
-            MsgBox("File Does Not Exist    " & downloadlist)
+            log.Log1.Items.Add("Download List missing: " & downloadlist)
         End If
     End Sub
     Sub tempfilecrate()
@@ -96,7 +113,11 @@ Public Class Form1
     End Sub
     Sub tempfiledelete()
         If IO.Directory.Exists("C:\DNS-Temp") Then
-            IO.Directory.Delete("C:\DNS-Temp", True)
+            Try
+                IO.Directory.Delete("C:\DNS-Temp", True)
+            Catch ex As Exception
+                MsgBox("Exception: " & ex.ToString)
+            End Try
         End If
     End Sub
     Sub unzip(ByVal ziplocation As String, ByVal endfile As String)
@@ -110,8 +131,12 @@ Public Class Form1
                 Next
             End Using
         Catch ex1 As Exception
-            MsgBox("Exception: " & ex1.ToString)
+            log.Log1.Items.Add("Exception in unzip: " & ex1.ToString)
         End Try
     End Sub
 #End Region
+
+    Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
+        log.Show()
+    End Sub
 End Class
