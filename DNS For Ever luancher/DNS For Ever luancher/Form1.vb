@@ -1,7 +1,6 @@
 ﻿Imports System
 Imports System.IO
 Imports Ionic.Zip
-
 Public Class Form1
 #Region "dims"
     Dim path As String
