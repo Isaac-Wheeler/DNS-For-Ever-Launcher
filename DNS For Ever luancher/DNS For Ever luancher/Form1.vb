@@ -15,7 +15,7 @@ Public Class Form1
     Private Sub PictureBox1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PictureBox1.Click
         System.Diagnostics.Process.Start("http://dns.mage-tech.org/")
     End Sub
-    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+    Private Sub SetFilePathBtn_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SetFilePathBtn.Click
         setfilepath()
     End Sub
     Private Sub Form1_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
@@ -25,8 +25,11 @@ Public Class Form1
         MCFilePath()
         tempfilecrate()
     End Sub
-    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+    Private Sub DownloadBtn_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DownloadBtn.Click
         download()
+    End Sub
+    Private Sub ShowLogBtn_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ShowLogBtn.Click
+        log.Show()
     End Sub
 #End Region
 #Region "subs/functions"
@@ -142,8 +145,4 @@ Public Class Form1
         End Try
     End Function
 #End Region
-
-    Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
-        log.Show()
-    End Sub
 End Class

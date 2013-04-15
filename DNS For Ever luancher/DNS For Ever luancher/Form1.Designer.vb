@@ -22,31 +22,31 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.SetFilePathBtn = New System.Windows.Forms.Button()
         Me.MineCraftFileLocation = New System.Windows.Forms.FolderBrowserDialog()
-        Me.Button2 = New System.Windows.Forms.Button()
+        Me.DownloadBtn = New System.Windows.Forms.Button()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.Button3 = New System.Windows.Forms.Button()
+        Me.ShowLogBtn = New System.Windows.Forms.Button()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'Button1
+        'SetFilePathBtn
         '
-        Me.Button1.Location = New System.Drawing.Point(554, 5)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(61, 40)
-        Me.Button1.TabIndex = 1
-        Me.Button1.Text = "set file path"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.SetFilePathBtn.Location = New System.Drawing.Point(554, 5)
+        Me.SetFilePathBtn.Name = "SetFilePathBtn"
+        Me.SetFilePathBtn.Size = New System.Drawing.Size(61, 40)
+        Me.SetFilePathBtn.TabIndex = 1
+        Me.SetFilePathBtn.Text = "set file path"
+        Me.SetFilePathBtn.UseVisualStyleBackColor = True
         '
-        'Button2
+        'DownloadBtn
         '
-        Me.Button2.Location = New System.Drawing.Point(12, 349)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(61, 30)
-        Me.Button2.TabIndex = 2
-        Me.Button2.Text = "download"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.DownloadBtn.Location = New System.Drawing.Point(12, 349)
+        Me.DownloadBtn.Name = "DownloadBtn"
+        Me.DownloadBtn.Size = New System.Drawing.Size(61, 30)
+        Me.DownloadBtn.TabIndex = 2
+        Me.DownloadBtn.Text = "download"
+        Me.DownloadBtn.UseVisualStyleBackColor = True
         '
         'PictureBox1
         '
@@ -58,23 +58,23 @@ Partial Class Form1
         Me.PictureBox1.TabIndex = 0
         Me.PictureBox1.TabStop = False
         '
-        'Button3
+        'ShowLogBtn
         '
-        Me.Button3.Location = New System.Drawing.Point(79, 344)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(61, 41)
-        Me.Button3.TabIndex = 3
-        Me.Button3.Text = "Show Log"
-        Me.Button3.UseVisualStyleBackColor = True
+        Me.ShowLogBtn.Location = New System.Drawing.Point(79, 344)
+        Me.ShowLogBtn.Name = "ShowLogBtn"
+        Me.ShowLogBtn.Size = New System.Drawing.Size(61, 41)
+        Me.ShowLogBtn.TabIndex = 3
+        Me.ShowLogBtn.Text = "Show Log"
+        Me.ShowLogBtn.UseVisualStyleBackColor = True
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(626, 408)
-        Me.Controls.Add(Me.Button3)
-        Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.ShowLogBtn)
+        Me.Controls.Add(Me.DownloadBtn)
+        Me.Controls.Add(Me.SetFilePathBtn)
         Me.Controls.Add(Me.PictureBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
         Me.MaximizeBox = False
@@ -85,9 +85,9 @@ Partial Class Form1
 
     End Sub
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
-    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents SetFilePathBtn As System.Windows.Forms.Button
     Friend WithEvents MineCraftFileLocation As System.Windows.Forms.FolderBrowserDialog
-    Friend WithEvents Button2 As System.Windows.Forms.Button
-    Friend WithEvents Button3 As System.Windows.Forms.Button
+    Friend WithEvents DownloadBtn As System.Windows.Forms.Button
+    Friend WithEvents ShowLogBtn As System.Windows.Forms.Button
 
 End Class
