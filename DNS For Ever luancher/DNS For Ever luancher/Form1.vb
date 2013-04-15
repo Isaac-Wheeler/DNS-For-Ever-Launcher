@@ -58,12 +58,13 @@ Public Class Form1
         Dim name As String
         Dim zipYN As String
         Dim ziplocation As String
+        Dim zipendpoint As String
         If IO.File.Exists(tempFiles & "mage.txt") = False Then
-            My.Computer.Network.DownloadFile("http://mage-tech.org/mage.txt", "C:\DNS-Temp\mage.txt")
+            My.Computer.Network.DownloadFile("http://mage-tech.org/pack/mage.txt", "C:\DNS-Temp\mage.txt")
         Else
             Try
                 IO.File.Delete(tempFiles & "mage.txt")
-                My.Computer.Network.DownloadFile("http://mage-tech.org/mage.txt", tempFiles & "mage.txt")
+                My.Computer.Network.DownloadFile("http://mage-tech.org/pack/mage.txt", tempFiles & "mage.txt")
             Catch ex As Exception
                 log.Log1.Items.Add("Exception: " & ex.ToString)
             End Try
@@ -86,16 +87,18 @@ Public Class Form1
                     Try
                         My.Computer.Network.DownloadFile(location, tempFiles & name)
                         ziplocation = tempFiles & name
-                        If unzip(ziplocation, ziplocation) Then
+                        zipendpoint = ziplocation.Remove(ziplocation.Length - 6, 4)
+                        zipendpoint = zipendpoint.Trim
+                        ziplocation = ziplocation.Trim
+                        If unzip(ziplocation, zipendpoint) Then
                             If IO.File.Exists(ziplocation) Then
-                                IO.Directory.Delete(ziplocation)
+                                IO.File.Delete(ziplocation)
                             End If
                             MsgBox("file downloaded and unziped")
                         Else
                             log.Log1.Items.Add("Error in Unziping file " & ziplocation)
                             MsgBox("Could not unZip " & name)
                         End If
-
                     Catch ex As Exception
                         log.Log1.Items.Add("Exception: " & ex.ToString)
                     End Try
@@ -109,7 +112,8 @@ Public Class Form1
     Sub tempfilecrate()
         If IO.Directory.Exists("C:\DNS-Temp") = False Then
             IO.Directory.CreateDirectory("C:\DNS-Temp")
-            Select Case IO.Directory.Exists(tempFiles & "mods")
+            Select Case IO.Directory.Exists(tempFiles & "mods") or IO.Directory.Exists(tempFiles & "config") _
+                or IO.
                 Case Is = False
                     IO.Directory.CreateDirectory(tempFiles & "mods")
                     IO.Directory.CreateDirectory(tempFiles & "config")
