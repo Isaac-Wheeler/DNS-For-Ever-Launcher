@@ -24,9 +24,10 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Me.SetFilePathBtn = New System.Windows.Forms.Button()
         Me.MineCraftFileLocation = New System.Windows.Forms.FolderBrowserDialog()
-        Me.DownloadBtn = New System.Windows.Forms.Button()
+        Me.InstallBtn = New System.Windows.Forms.Button()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.ShowLogBtn = New System.Windows.Forms.Button()
+        Me.Button1 = New System.Windows.Forms.Button()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -39,14 +40,14 @@ Partial Class Form1
         Me.SetFilePathBtn.Text = "set file path"
         Me.SetFilePathBtn.UseVisualStyleBackColor = True
         '
-        'DownloadBtn
+        'InstallBtn
         '
-        Me.DownloadBtn.Location = New System.Drawing.Point(12, 349)
-        Me.DownloadBtn.Name = "DownloadBtn"
-        Me.DownloadBtn.Size = New System.Drawing.Size(61, 30)
-        Me.DownloadBtn.TabIndex = 2
-        Me.DownloadBtn.Text = "download"
-        Me.DownloadBtn.UseVisualStyleBackColor = True
+        Me.InstallBtn.Location = New System.Drawing.Point(12, 349)
+        Me.InstallBtn.Name = "InstallBtn"
+        Me.InstallBtn.Size = New System.Drawing.Size(61, 30)
+        Me.InstallBtn.TabIndex = 2
+        Me.InstallBtn.Text = "Install"
+        Me.InstallBtn.UseVisualStyleBackColor = True
         '
         'PictureBox1
         '
@@ -67,13 +68,23 @@ Partial Class Form1
         Me.ShowLogBtn.Text = "Show Log"
         Me.ShowLogBtn.UseVisualStyleBackColor = True
         '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(175, 374)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 4
+        Me.Button1.Text = "Button1"
+        Me.Button1.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(626, 408)
+        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.ShowLogBtn)
-        Me.Controls.Add(Me.DownloadBtn)
+        Me.Controls.Add(Me.InstallBtn)
         Me.Controls.Add(Me.SetFilePathBtn)
         Me.Controls.Add(Me.PictureBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
@@ -87,7 +98,8 @@ Partial Class Form1
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents SetFilePathBtn As System.Windows.Forms.Button
     Friend WithEvents MineCraftFileLocation As System.Windows.Forms.FolderBrowserDialog
-    Friend WithEvents DownloadBtn As System.Windows.Forms.Button
+    Friend WithEvents InstallBtn As System.Windows.Forms.Button
     Friend WithEvents ShowLogBtn As System.Windows.Forms.Button
+    Friend WithEvents Button1 As System.Windows.Forms.Button
 
 End Class

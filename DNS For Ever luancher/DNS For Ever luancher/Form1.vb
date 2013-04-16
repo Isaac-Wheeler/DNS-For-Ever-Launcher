@@ -3,7 +3,7 @@ Imports System.IO
 Imports Ionic.Zip
 Public Class Form1
 #Region "dims"
-    Dim path As String
+    Dim mcpath As String
     Dim pathL As Short
     Dim tempFiles As String = "C:\DNS-Temp\"
     Declare Function GetUserName Lib "advapi32.dll" Alias _
@@ -24,8 +24,13 @@ Public Class Form1
         MCFilePath()
         tempfilecrate()
     End Sub
-    Private Sub DownloadBtn_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DownloadBtn.Click
+    Private Sub InstallBtn_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles InstallBtn.Click
+        MsgBox("working please wait")
+        openjar()
         download()
+        'closejar()
+        install()
+        MsgBox("done")
     End Sub
     Private Sub ShowLogBtn_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ShowLogBtn.Click
         log.Show()
@@ -33,16 +38,15 @@ Public Class Form1
 #End Region
 #Region "subs/functions"
     Sub MCFilePath()
-        path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)
-        path = path.Remove(0, 6)
-        pathL = path.Length()
-        path = "C:\Users\" + GetUserName + "\AppData\Roaming\.minecraft"
+        mcpath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)
+        mcpath = mcpath.Remove(0, 6)
+        pathL = mcpath.Length()
+        mcpath = "C:\Users\" + GetUserName + "\AppData\Roaming\.minecraft"
     End Sub
     Sub setfilepath()
-        MineCraftFileLocation.SelectedPath = path
-        'MineCraftFileLocation.ShowDialog()
+        MineCraftFileLocation.SelectedPath = mcpath
         If MineCraftFileLocation.ShowDialog = Windows.Forms.DialogResult.OK Then
-            path = MineCraftFileLocation.SelectedPath.ToString
+            mcpath = MineCraftFileLocation.SelectedPath.ToString
         End If
     End Sub
     Public Function GetUserName() As String
@@ -57,8 +61,9 @@ Public Class Form1
         Dim location As String
         Dim name As String
         Dim zipYN As String
-        Dim ziplocation As String
-        Dim zipendpoint As String
+        Dim ziploc As String
+        Dim zipsave As String
+        Dim saveloc As String
         If IO.File.Exists(tempFiles & "mage.txt") = False Then
             My.Computer.Network.DownloadFile("http://mage-tech.org/pack/mage.txt", "C:\DNS-Temp\mage.txt")
         Else
@@ -72,39 +77,41 @@ Public Class Form1
         If System.IO.File.Exists(downloadlist) = True Then
             Dim objReader As New System.IO.StreamReader(downloadlist)
             Do While objReader.Peek() <> -1
-                location = objReader.ReadLine() & vbNewLine
-                name = objReader.ReadLine() & vbNewLine
-                zipYN = objReader.ReadLine() & vbNewLine
+                location = objReader.ReadLine()
+                name = objReader.ReadLine()
+                zipYN = objReader.ReadLine()
+                saveloc = objReader.ReadLine()
                 zipYN = zipYN.Trim
+                saveloc.Trim()
+                zipsave = tempFiles & saveloc & name
                 If zipYN = "no" Then
                     Try
-                        My.Computer.Network.DownloadFile(location, tempFiles & name)
+                        My.Computer.Network.DownloadFile(location, zipsave)
                         MsgBox("file downloaded")
                     Catch ex As Exception
                         log.Log1.Items.Add("Exception: " & ex.ToString)
+                        MsgBox(ex.ToString)
                     End Try
                 ElseIf zipYN = "yes" Then
                     Try
-                        My.Computer.Network.DownloadFile(location, tempFiles & name)
-                        ziplocation = tempFiles & name
-                        zipendpoint = ziplocation.Remove(ziplocation.Length - 6, 4)
-                        zipendpoint = zipendpoint.Trim
-                        ziplocation = ziplocation.Trim
-                        If unzip(ziplocation, zipendpoint) Then
-                            If IO.File.Exists(ziplocation) Then
-                                IO.File.Delete(ziplocation)
+                        My.Computer.Network.DownloadFile(location, zipsave)
+                        ziploc = tempFiles & saveloc & name
+                        If unzip(ziploc, tempFiles & saveloc) Then
+                            If IO.File.Exists(ziploc) Then
+                                IO.File.Delete(ziploc)
                             End If
                             MsgBox("file downloaded and unziped")
                         Else
-                            log.Log1.Items.Add("Error in Unziping file " & ziplocation)
+                            log.Log1.Items.Add("Error in Unziping file " & ziploc)
                             MsgBox("Could not unZip " & name)
                         End If
                     Catch ex As Exception
                         log.Log1.Items.Add("Exception: " & ex.ToString)
+                        MsgBox(ex.ToString)
                     End Try
-
                 End If
             Loop
+            objReader.Dispose()
         Else
             log.Log1.Items.Add("Download List missing: " & downloadlist)
         End If
@@ -112,8 +119,8 @@ Public Class Form1
     Sub tempfilecrate()
         If IO.Directory.Exists("C:\DNS-Temp") = False Then
             IO.Directory.CreateDirectory("C:\DNS-Temp")
-            Select Case IO.Directory.Exists(tempFiles & "mods") or IO.Directory.Exists(tempFiles & "config") _
-                or IO.
+            Select Case IO.Directory.Exists(tempFiles & "mods") Or IO.Directory.Exists(tempFiles & "config") _
+                Or IO.Directory.Exists(tempFiles & "coremods") Or IO.Directory.Exists(tempFiles & "toJar")
                 Case Is = False
                     IO.Directory.CreateDirectory(tempFiles & "mods")
                     IO.Directory.CreateDirectory(tempFiles & "config")
@@ -147,5 +154,54 @@ Public Class Form1
             Return False
         End Try
     End Function
+    Sub install()
+        IO.File.Delete(tempFiles & "mage.txt")
+        CopyDirectory(tempFiles, mcpath)
+    End Sub
+    Sub CopyDirectory(ByVal SourcePath As String, ByVal DestPath As String, Optional ByVal Overwrite As Boolean = False)
+        Dim SourceDir As DirectoryInfo = New DirectoryInfo(SourcePath)
+        Dim DestDir As DirectoryInfo = New DirectoryInfo(DestPath)
+        If SourceDir.Exists Then
+            If Not DestDir.Parent.Exists Then
+                log.Log1.Items.Add("Destination directory does not exist: " + DestDir.Parent.FullName)
+            End If
+            If Not DestDir.Exists Then
+                DestDir.Create()
+            End If
+            Dim ChildFile As FileInfo
+            For Each ChildFile In SourceDir.GetFiles()
+                If Overwrite Then
+                    ChildFile.CopyTo(Path.Combine(DestDir.FullName, ChildFile.Name), True)
+                Else
+                    If Not File.Exists(Path.Combine(DestDir.FullName, ChildFile.Name)) Then
+                        ChildFile.CopyTo(Path.Combine(DestDir.FullName, ChildFile.Name), False)
+                    End If
+                End If
+            Next
+            Dim SubDir As DirectoryInfo
+            For Each SubDir In SourceDir.GetDirectories()
+                CopyDirectory(SubDir.FullName, Path.Combine(DestDir.FullName, _
+                    SubDir.Name), Overwrite)
+            Next
+        Else
+            log.Log1.Items.Add("Source directory does not exist: " + SourceDir.FullName)
+        End If
+    End Sub
+    Sub openjar()
+        IO.File.Move(mcpath & "\bin\minecraft.jar", tempFiles & "toJar/mc.zip")
+        unzip(tempFiles & "toJar/mc.zip", tempFiles & "toJar")
+        IO.Directory.Delete(tempFiles & "toJar/META-INF", True)
+        MsgBox("minecraft unziped")
+    End Sub
+    Sub closejar()
+        rezip(tempFiles & "toJar", "minecraft.jar")
+        MsgBox("minecraft reziped")
+    End Sub
+    Sub rezip(ByVal zipDirectory As String, ByVal fileName As String)
+        Using zip As ZipFile = New ZipFile
+            zip.AddDirectory(zipDirectory)
+            zip.Save(fileName)
+        End Using
+    End Sub
 #End Region
 End Class
