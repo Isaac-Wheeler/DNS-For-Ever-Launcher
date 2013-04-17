@@ -1,11 +1,13 @@
 ﻿Imports System
 Imports System.IO
 Imports Ionic.Zip
+Imports System.Net
 Public Class Form1
 #Region "dims"
     Dim mcpath As String
     Dim pathL As Short
     Dim tempFiles As String = "C:\DNS-Temp\"
+    Dim WithEvents WC As New WebClient
     Declare Function GetUserName Lib "advapi32.dll" Alias _
  "GetUserNameA" (ByVal lpBuffer As String, _
  ByRef nSize As Integer) As Integer
@@ -23,14 +25,19 @@ Public Class Form1
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         MCFilePath()
         tempfilecrate()
+        Tasklbl.Text = ("")
     End Sub
     Private Sub InstallBtn_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles InstallBtn.Click
-        MsgBox("working please wait")
-        openjar()
+        Tasklbl.Text = "download started"
         download()
-        'closejar()
+        MainPrB.Value = 1
+        Tasklbl.Text = "adding Files to minecraft.jar"
+        addToMc()
+        MainPrB.Value = 2
+        Tasklbl.Text = "adding other files"
         install()
-        MsgBox("done")
+        MainPrB.Value = 3
+        MsgBox("installed")
     End Sub
     Private Sub ShowLogBtn_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ShowLogBtn.Click
         log.Show()
@@ -84,9 +91,10 @@ Public Class Form1
                 zipYN = zipYN.Trim
                 saveloc.Trim()
                 zipsave = tempFiles & saveloc & name
+                Tasklbl.Text = "donwloading: " & name
                 If zipYN = "no" Then
                     Try
-                        My.Computer.Network.DownloadFile(location, zipsave)
+                        WC.DownloadFileAsync(New Uri(location), zipsave)
                         MsgBox("file downloaded")
                     Catch ex As Exception
                         log.Log1.Items.Add("Exception: " & ex.ToString)
@@ -94,7 +102,7 @@ Public Class Form1
                     End Try
                 ElseIf zipYN = "yes" Then
                     Try
-                        My.Computer.Network.DownloadFile(location, zipsave)
+                        WC.DownloadFileAsync(New Uri(location), zipsave)
                         ziploc = tempFiles & saveloc & name
                         If unzip(ziploc, tempFiles & saveloc) Then
                             If IO.File.Exists(ziploc) Then
@@ -187,21 +195,19 @@ Public Class Form1
             log.Log1.Items.Add("Source directory does not exist: " + SourceDir.FullName)
         End If
     End Sub
-    Sub openjar()
-        IO.File.Move(mcpath & "\bin\minecraft.jar", tempFiles & "toJar/mc.zip")
-        unzip(tempFiles & "toJar/mc.zip", tempFiles & "toJar")
-        IO.Directory.Delete(tempFiles & "toJar/META-INF", True)
-        MsgBox("minecraft unziped")
+    Sub addToMc()
+        Try
+            Using zip As ZipFile = ZipFile.Read(mcpath & "\bin\minecraft.jar")
+                zip.AddDirectory(tempFiles & "toJar")
+                zip.Save("minecraft.jar")
+            End Using
+            IO.Directory.Delete(tempFiles & "toJar")
+        Catch ex As Exception
+            log.Log1.Items.Add("Exception in Adding files to minecraft: " & ex.ToString)
+        End Try
     End Sub
-    Sub closejar()
-        rezip(tempFiles & "toJar", "minecraft.jar")
-        MsgBox("minecraft reziped")
-    End Sub
-    Sub rezip(ByVal zipDirectory As String, ByVal fileName As String)
-        Using zip As ZipFile = New ZipFile
-            zip.AddDirectory(zipDirectory)
-            zip.Save(fileName)
-        End Using
+    Private Sub WC_DownloadProgressChanged(ByVal sender As Object, ByVal e As DownloadProgressChangedEventArgs) Handles WC.DownloadProgressChanged
+        SubPgB.Value = e.ProgressPercentage
     End Sub
 #End Region
 End Class

@@ -27,7 +27,12 @@ Partial Class Form1
         Me.InstallBtn = New System.Windows.Forms.Button()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.ShowLogBtn = New System.Windows.Forms.Button()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.MainPrB = New System.Windows.Forms.ProgressBar()
+        Me.MainPrglbl = New System.Windows.Forms.Label()
+        Me.SubPgB = New System.Windows.Forms.ProgressBar()
+        Me.Sublbl = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Tasklbl = New System.Windows.Forms.Label()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -68,21 +73,68 @@ Partial Class Form1
         Me.ShowLogBtn.Text = "Show Log"
         Me.ShowLogBtn.UseVisualStyleBackColor = True
         '
-        'Button1
+        'MainPrB
         '
-        Me.Button1.Location = New System.Drawing.Point(175, 374)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 4
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.MainPrB.Location = New System.Drawing.Point(237, 349)
+        Me.MainPrB.Maximum = 3
+        Me.MainPrB.Name = "MainPrB"
+        Me.MainPrB.Size = New System.Drawing.Size(311, 20)
+        Me.MainPrB.TabIndex = 4
+        '
+        'MainPrglbl
+        '
+        Me.MainPrglbl.AutoSize = True
+        Me.MainPrglbl.Location = New System.Drawing.Point(154, 351)
+        Me.MainPrglbl.Name = "MainPrglbl"
+        Me.MainPrglbl.Size = New System.Drawing.Size(77, 13)
+        Me.MainPrglbl.TabIndex = 5
+        Me.MainPrglbl.Text = "Main Progress:"
+        '
+        'SubPgB
+        '
+        Me.SubPgB.Location = New System.Drawing.Point(237, 375)
+        Me.SubPgB.Name = "SubPgB"
+        Me.SubPgB.Size = New System.Drawing.Size(310, 20)
+        Me.SubPgB.TabIndex = 6
+        '
+        'Sublbl
+        '
+        Me.Sublbl.AutoSize = True
+        Me.Sublbl.Location = New System.Drawing.Point(155, 376)
+        Me.Sublbl.Name = "Sublbl"
+        Me.Sublbl.Size = New System.Drawing.Size(70, 13)
+        Me.Sublbl.TabIndex = 7
+        Me.Sublbl.Text = "Sub Progress"
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(155, 400)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(34, 13)
+        Me.Label1.TabIndex = 8
+        Me.Label1.Text = "Task:"
+        '
+        'Tasklbl
+        '
+        Me.Tasklbl.AutoSize = True
+        Me.Tasklbl.Location = New System.Drawing.Point(195, 400)
+        Me.Tasklbl.Name = "Tasklbl"
+        Me.Tasklbl.Size = New System.Drawing.Size(39, 13)
+        Me.Tasklbl.TabIndex = 9
+        Me.Tasklbl.Text = "Label2"
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(626, 408)
-        Me.Controls.Add(Me.Button1)
+        Me.ClientSize = New System.Drawing.Size(626, 431)
+        Me.Controls.Add(Me.Tasklbl)
+        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.Sublbl)
+        Me.Controls.Add(Me.SubPgB)
+        Me.Controls.Add(Me.MainPrglbl)
+        Me.Controls.Add(Me.MainPrB)
         Me.Controls.Add(Me.ShowLogBtn)
         Me.Controls.Add(Me.InstallBtn)
         Me.Controls.Add(Me.SetFilePathBtn)
@@ -93,6 +145,7 @@ Partial Class Form1
         Me.Text = "Form1"
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
@@ -100,6 +153,11 @@ Partial Class Form1
     Friend WithEvents MineCraftFileLocation As System.Windows.Forms.FolderBrowserDialog
     Friend WithEvents InstallBtn As System.Windows.Forms.Button
     Friend WithEvents ShowLogBtn As System.Windows.Forms.Button
-    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents MainPrB As System.Windows.Forms.ProgressBar
+    Friend WithEvents MainPrglbl As System.Windows.Forms.Label
+    Friend WithEvents SubPgB As System.Windows.Forms.ProgressBar
+    Friend WithEvents Sublbl As System.Windows.Forms.Label
+    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents Tasklbl As System.Windows.Forms.Label
 
 End Class
