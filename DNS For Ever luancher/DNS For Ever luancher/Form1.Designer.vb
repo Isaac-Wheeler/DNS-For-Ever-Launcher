@@ -22,10 +22,10 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.SetFilePathBtn = New System.Windows.Forms.Button()
         Me.MineCraftFileLocation = New System.Windows.Forms.FolderBrowserDialog()
         Me.InstallBtn = New System.Windows.Forms.Button()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.ShowLogBtn = New System.Windows.Forms.Button()
         Me.MainPrB = New System.Windows.Forms.ProgressBar()
         Me.MainPrglbl = New System.Windows.Forms.Label()
@@ -33,6 +33,7 @@ Partial Class Form1
         Me.Sublbl = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Tasklbl = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -53,16 +54,6 @@ Partial Class Form1
         Me.InstallBtn.TabIndex = 2
         Me.InstallBtn.Text = "Install"
         Me.InstallBtn.UseVisualStyleBackColor = True
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = Global.DNS_For_Ever_luancher.My.Resources.Resources.DNS_For_Ever
-        Me.PictureBox1.Location = New System.Drawing.Point(7, 5)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(541, 333)
-        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox1.TabIndex = 0
-        Me.PictureBox1.TabStop = False
         '
         'ShowLogBtn
         '
@@ -124,6 +115,16 @@ Partial Class Form1
         Me.Tasklbl.TabIndex = 9
         Me.Tasklbl.Text = "Label2"
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Image = Global.DNS_For_Ever_luancher.My.Resources.Resources.DNS_For_Ever
+        Me.PictureBox1.Location = New System.Drawing.Point(7, 5)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(541, 333)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox1.TabIndex = 0
+        Me.PictureBox1.TabStop = False
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -140,9 +141,10 @@ Partial Class Form1
         Me.Controls.Add(Me.SetFilePathBtn)
         Me.Controls.Add(Me.PictureBox1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.Name = "Form1"
-        Me.Text = "Form1"
+        Me.Text = "DNS Tech Pack Luancher"
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()

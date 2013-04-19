@@ -24,9 +24,9 @@ Public Class Form1
         tempfiledelete()
     End Sub
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Tasklbl.Text = ("")
         MCFilePath()
         tempfilecrate()
-        Tasklbl.Text = ("")
     End Sub
     Private Sub InstallBtn_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles InstallBtn.Click
         Tasklbl.Text = "download started"
@@ -155,20 +155,25 @@ Public Class Form1
         End Try
     End Sub
     Sub tempfilecrate()
-        If IO.Directory.Exists("C:\DNS-Temp") = False Then
-            IO.Directory.CreateDirectory("C:\DNS-Temp")
-            Select Case IO.Directory.Exists(tempFiles & "mods") Or IO.Directory.Exists(tempFiles & "config") _
-                Or IO.Directory.Exists(tempFiles & "coremods") Or IO.Directory.Exists(tempFiles & "toJar")
-                Case Is = False
-                    IO.Directory.CreateDirectory(tempFiles & "mods")
-                    IO.Directory.CreateDirectory(tempFiles & "config")
-                    IO.Directory.CreateDirectory(tempFiles & "coremods")
-                    IO.Directory.CreateDirectory(tempFiles & "toJar")
-            End Select
-        End If
-        If IO.Directory.Exists(curentLocation.ToString & "Downloads") = False Then
-            IO.Directory.CreateDirectory(curentLocation.ToString & "Downloads")
-        End If
+        Try
+            If IO.Directory.Exists("C:\DNS-Temp") = False Then
+                IO.Directory.CreateDirectory("C:\DNS-Temp")
+                Select Case IO.Directory.Exists(tempFiles & "mods") Or IO.Directory.Exists(tempFiles & "config") _
+                    Or IO.Directory.Exists(tempFiles & "coremods") Or IO.Directory.Exists(tempFiles & "toJar")
+                    Case Is = False
+                        IO.Directory.CreateDirectory(tempFiles & "mods")
+                        IO.Directory.CreateDirectory(tempFiles & "config")
+                        IO.Directory.CreateDirectory(tempFiles & "coremods")
+                        IO.Directory.CreateDirectory(tempFiles & "toJar")
+                End Select
+            End If
+            If IO.Directory.Exists(curentLocation.ToString & "Downloads") = False Then
+                IO.Directory.CreateDirectory(curentLocation.ToString & "Downloads")
+            End If
+        Catch ex As Exception
+            log.Log1.Items.Add("error in makeing TempDirectorys: " & ex.ToString)
+        End Try
+
     End Sub
     Sub tempfiledelete()
         If IO.Directory.Exists("C:\DNS-Temp") Then

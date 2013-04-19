@@ -60,9 +60,16 @@ Namespace My.Resources
             End Set
         End Property
         
+        Friend ReadOnly Property _493_Arceus_Dragon() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("_493_Arceus_Dragon", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
         Friend ReadOnly Property DNS_For_Ever() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("DNS For Ever", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("DNS_For_Ever", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
