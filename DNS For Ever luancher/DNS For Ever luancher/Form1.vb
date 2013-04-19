@@ -11,6 +11,7 @@ Public Class Form1
     Declare Function GetUserName Lib "advapi32.dll" Alias _
  "GetUserNameA" (ByVal lpBuffer As String, _
  ByRef nSize As Integer) As Integer
+    Dim curentLocation As String = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)
 #End Region
 #Region "does stuff"
     Private Sub PictureBox1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PictureBox1.Click
@@ -45,9 +46,6 @@ Public Class Form1
 #End Region
 #Region "subs/functions"
     Sub MCFilePath()
-        mcpath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)
-        mcpath = mcpath.Remove(0, 6)
-        pathL = mcpath.Length()
         mcpath = "C:\Users\" + GetUserName + "\AppData\Roaming\.minecraft"
     End Sub
     Sub setfilepath()
@@ -64,65 +62,97 @@ Public Class Form1
         GetUserName = userName.Substring(0, userName.IndexOf(Chr(0)))
     End Function
     Sub download()
-        Dim downloadlist As String = tempFiles & "mage.txt"
-        Dim location As String
-        Dim name As String
-        Dim zipYN As String
-        Dim ziploc As String
-        Dim zipsave As String
-        Dim saveloc As String
-        If IO.File.Exists(tempFiles & "mage.txt") = False Then
-            My.Computer.Network.DownloadFile("http://mage-tech.org/pack/mage.txt", "C:\DNS-Temp\mage.txt")
-        Else
-            Try
+        Try
+            Dim downloadlist As String = tempFiles & "mage.txt"
+            Dim location As String
+            Dim name As String
+            Dim zipYN As String
+            Dim ziploc As String
+            Dim zipsave As String
+            Dim saveloc As String
+            Dim adfly As String
+            If IO.File.Exists(tempFiles & "mage.txt") = False Then
+                My.Computer.Network.DownloadFile("http://mage-tech.org/pack/mage.txt", "C:\DNS-Temp\mage.txt")
+            Else
                 IO.File.Delete(tempFiles & "mage.txt")
                 My.Computer.Network.DownloadFile("http://mage-tech.org/pack/mage.txt", tempFiles & "mage.txt")
-            Catch ex As Exception
-                log.Log1.Items.Add("Exception: " & ex.ToString)
-            End Try
-        End If
-        If System.IO.File.Exists(downloadlist) = True Then
-            Dim objReader As New System.IO.StreamReader(downloadlist)
-            Do While objReader.Peek() <> -1
-                location = objReader.ReadLine()
-                name = objReader.ReadLine()
-                zipYN = objReader.ReadLine()
-                saveloc = objReader.ReadLine()
-                zipYN = zipYN.Trim
-                saveloc.Trim()
-                zipsave = tempFiles & saveloc & name
-                Tasklbl.Text = "donwloading: " & name
-                If zipYN = "no" Then
-                    Try
-                        WC.DownloadFileAsync(New Uri(location), zipsave)
-                        MsgBox("file downloaded")
-                    Catch ex As Exception
-                        log.Log1.Items.Add("Exception: " & ex.ToString)
-                        MsgBox(ex.ToString)
-                    End Try
-                ElseIf zipYN = "yes" Then
-                    Try
-                        WC.DownloadFileAsync(New Uri(location), zipsave)
-                        ziploc = tempFiles & saveloc & name
-                        If unzip(ziploc, tempFiles & saveloc) Then
-                            If IO.File.Exists(ziploc) Then
-                                IO.File.Delete(ziploc)
+            End If
+            If System.IO.File.Exists(downloadlist) = True Then
+                Dim objReader As New System.IO.StreamReader(downloadlist)
+                Do While objReader.Peek() <> -1
+                    location = objReader.ReadLine()
+                    name = objReader.ReadLine()
+                    zipYN = objReader.ReadLine()
+                    saveloc = objReader.ReadLine()
+                    adfly = objReader.ReadLine()
+                    adfly.Trim()
+                    zipYN.Trim()
+                    saveloc.Trim()
+                    zipsave = tempFiles & saveloc & name
+                    Tasklbl.Text = "donwloading: " & name
+                    If adfly = "no" Then
+                        If zipYN = "no" Then
+                            WC.DownloadFile(New Uri(location), zipsave)
+                        ElseIf zipYN = "yes" Then
+                            WC.DownloadFile(New Uri(location), zipsave)
+                            ziploc = tempFiles & saveloc & name
+                            If unzip(ziploc, tempFiles & saveloc) Then
+                                If IO.File.Exists(ziploc) Then
+                                    IO.File.Delete(ziploc)
+                                End If
+                            Else
+                                log.Log1.Items.Add("Error in Unziping file " & ziploc)
+                                MsgBox("Could not unZip " & name)
                             End If
-                            MsgBox("file downloaded and unziped")
-                        Else
-                            log.Log1.Items.Add("Error in Unziping file " & ziploc)
-                            MsgBox("Could not unZip " & name)
                         End If
-                    Catch ex As Exception
-                        log.Log1.Items.Add("Exception: " & ex.ToString)
-                        MsgBox(ex.ToString)
-                    End Try
-                End If
-            Loop
-            objReader.Dispose()
-        Else
-            log.Log1.Items.Add("Download List missing: " & downloadlist)
-        End If
+                    Else
+                        Dim rel As Boolean
+                        While rel = True
+                            Dim run As Short
+                            Dim msgboxText As String = "Need to Download: " & name & vbNewLine _
+                                                       & "Click OK to download Cancel to abort install" & vbNewLine _
+                                                       & "please save in the downloads folder at " & curentLocation & vbNewLine _
+                                                       & "this will show up " & run & " more times"
+                            Dim msgboxResult As MsgBoxResult
+                            msgboxResult = MsgBox(msgboxText, MsgBoxStyle.OkCancel, "file download")
+                            If msgboxResult = Microsoft.VisualBasic.MsgBoxResult.Ok Then
+                                System.Diagnostics.Process.Start(location)
+                                If IO.File.Exists(curentLocation & "/Downloads/" & name) Then
+                                    IO.File.Move(curentLocation & "/Downloads/" & name, zipsave)
+                                    If zipYN = "no" Then
+                                        rel = False
+                                    ElseIf zipYN = "yes" Then
+                                        ziploc = tempFiles & saveloc & name
+                                        If unzip(ziploc, tempFiles & saveloc) Then
+                                            If IO.File.Exists(ziploc) Then
+                                                IO.File.Delete(ziploc)
+                                            End If
+                                        Else
+                                            log.Log1.Items.Add("Error in Unziping file " & ziploc)
+                                            MsgBox("Could not unZip " & name)
+                                        End If
+                                        rel = False
+                                    End If
+
+                                End If
+                                Else
+                                    If run < 4 Then
+                                        run += 1
+                                    Else
+                                        Me.Close()
+                                    End If
+                                End If
+                        End While
+                    End If
+                Loop
+                objReader.Dispose()
+                WC.Dispose()
+            Else
+                log.Log1.Items.Add("Download List missing: " & downloadlist)
+            End If
+        Catch ex As Exception
+            log.Log1.Items.Add("Exception: " & ex.ToString)
+        End Try
     End Sub
     Sub tempfilecrate()
         If IO.Directory.Exists("C:\DNS-Temp") = False Then
@@ -135,6 +165,9 @@ Public Class Form1
                     IO.Directory.CreateDirectory(tempFiles & "coremods")
                     IO.Directory.CreateDirectory(tempFiles & "toJar")
             End Select
+        End If
+        If IO.Directory.Exists(curentLocation.ToString & "Downloads") = False Then
+            IO.Directory.CreateDirectory(curentLocation.ToString & "Downloads")
         End If
     End Sub
     Sub tempfiledelete()
@@ -199,7 +232,7 @@ Public Class Form1
         Try
             Using zip As ZipFile = ZipFile.Read(mcpath & "\bin\minecraft.jar")
                 zip.AddDirectory(tempFiles & "toJar")
-                zip.Save("minecraft.jar")
+                zip.Save(mcpath & "\bin\minecraft.jar")
             End Using
             IO.Directory.Delete(tempFiles & "toJar")
         Catch ex As Exception
