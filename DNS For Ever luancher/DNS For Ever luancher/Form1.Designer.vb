@@ -29,11 +29,11 @@ Partial Class Form1
         Me.ShowLogBtn = New System.Windows.Forms.Button()
         Me.MainPrB = New System.Windows.Forms.ProgressBar()
         Me.MainPrglbl = New System.Windows.Forms.Label()
-        Me.SubPgB = New System.Windows.Forms.ProgressBar()
-        Me.Sublbl = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Tasklbl = New System.Windows.Forms.Label()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.Sublbl = New System.Windows.Forms.Label()
+        Me.SubPgB = New System.Windows.Forms.ProgressBar()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -81,22 +81,6 @@ Partial Class Form1
         Me.MainPrglbl.TabIndex = 5
         Me.MainPrglbl.Text = "Main Progress:"
         '
-        'SubPgB
-        '
-        Me.SubPgB.Location = New System.Drawing.Point(237, 375)
-        Me.SubPgB.Name = "SubPgB"
-        Me.SubPgB.Size = New System.Drawing.Size(310, 20)
-        Me.SubPgB.TabIndex = 6
-        '
-        'Sublbl
-        '
-        Me.Sublbl.AutoSize = True
-        Me.Sublbl.Location = New System.Drawing.Point(155, 376)
-        Me.Sublbl.Name = "Sublbl"
-        Me.Sublbl.Size = New System.Drawing.Size(70, 13)
-        Me.Sublbl.TabIndex = 7
-        Me.Sublbl.Text = "Sub Progress"
-        '
         'Label1
         '
         Me.Label1.AutoSize = True
@@ -124,6 +108,22 @@ Partial Class Form1
         Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.PictureBox1.TabIndex = 0
         Me.PictureBox1.TabStop = False
+        '
+        'Sublbl
+        '
+        Me.Sublbl.AutoSize = True
+        Me.Sublbl.Location = New System.Drawing.Point(155, 376)
+        Me.Sublbl.Name = "Sublbl"
+        Me.Sublbl.Size = New System.Drawing.Size(70, 13)
+        Me.Sublbl.TabIndex = 7
+        Me.Sublbl.Text = "Sub Progress"
+        '
+        'SubPgB
+        '
+        Me.SubPgB.Location = New System.Drawing.Point(237, 375)
+        Me.SubPgB.Name = "SubPgB"
+        Me.SubPgB.Size = New System.Drawing.Size(310, 20)
+        Me.SubPgB.TabIndex = 6
         '
         'Form1
         '
@@ -157,9 +157,9 @@ Partial Class Form1
     Friend WithEvents ShowLogBtn As System.Windows.Forms.Button
     Friend WithEvents MainPrB As System.Windows.Forms.ProgressBar
     Friend WithEvents MainPrglbl As System.Windows.Forms.Label
-    Friend WithEvents SubPgB As System.Windows.Forms.ProgressBar
-    Friend WithEvents Sublbl As System.Windows.Forms.Label
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Tasklbl As System.Windows.Forms.Label
+    Friend WithEvents Sublbl As System.Windows.Forms.Label
+    Friend WithEvents SubPgB As System.Windows.Forms.ProgressBar
 
 End Class

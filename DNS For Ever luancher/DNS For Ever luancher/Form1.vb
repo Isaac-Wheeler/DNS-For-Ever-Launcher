@@ -72,10 +72,10 @@ Public Class Form1
             Dim saveloc As String
             Dim adfly As String
             If IO.File.Exists(tempFiles & "mage.txt") = False Then
-                My.Computer.Network.DownloadFile("http://mage-tech.org/pack/mage.txt", "C:\DNS-Temp\mage.txt")
+                WC.DownloadFile(New Uri("http://mage-tech.org/pack/mage.txt"), "C:\DNS-Temp\mage.txt")
             Else
                 IO.File.Delete(tempFiles & "mage.txt")
-                My.Computer.Network.DownloadFile("http://mage-tech.org/pack/mage.txt", tempFiles & "mage.txt")
+                WC.DownloadFile(New Uri("http://mage-tech.org/pack/mage.txt"), tempFiles & "mage.txt")
             End If
             If System.IO.File.Exists(downloadlist) = True Then
                 Dim objReader As New System.IO.StreamReader(downloadlist)
@@ -96,6 +96,7 @@ Public Class Form1
                         ElseIf zipYN = "yes" Then
                             WC.DownloadFile(New Uri(location), zipsave)
                             ziploc = tempFiles & saveloc & name
+                            Tasklbl.Text = "Unziping: " & name
                             If unzip(ziploc, tempFiles & saveloc) Then
                                 If IO.File.Exists(ziploc) Then
                                     IO.File.Delete(ziploc)
@@ -106,43 +107,7 @@ Public Class Form1
                             End If
                         End If
                     Else
-                        Dim rel As Boolean
-                        While rel = True
-                            Dim run As Short
-                            Dim msgboxText As String = "Need to Download: " & name & vbNewLine _
-                                                       & "Click OK to download Cancel to abort install" & vbNewLine _
-                                                       & "please save in the downloads folder at " & curentLocation & vbNewLine _
-                                                       & "this will show up " & run & " more times"
-                            Dim msgboxResult As MsgBoxResult
-                            msgboxResult = MsgBox(msgboxText, MsgBoxStyle.OkCancel, "file download")
-                            If msgboxResult = Microsoft.VisualBasic.MsgBoxResult.Ok Then
-                                System.Diagnostics.Process.Start(location)
-                                If IO.File.Exists(curentLocation & "/Downloads/" & name) Then
-                                    IO.File.Move(curentLocation & "/Downloads/" & name, zipsave)
-                                    If zipYN = "no" Then
-                                        rel = False
-                                    ElseIf zipYN = "yes" Then
-                                        ziploc = tempFiles & saveloc & name
-                                        If unzip(ziploc, tempFiles & saveloc) Then
-                                            If IO.File.Exists(ziploc) Then
-                                                IO.File.Delete(ziploc)
-                                            End If
-                                        Else
-                                            log.Log1.Items.Add("Error in Unziping file " & ziploc)
-                                            MsgBox("Could not unZip " & name)
-                                        End If
-                                        rel = False
-                                    End If
-
-                                End If
-                                Else
-                                    If run < 4 Then
-                                        run += 1
-                                    Else
-                                        Me.Close()
-                                    End If
-                                End If
-                        End While
+                        remotedownload(location, name, zipsave, saveloc, zipYN)
                     End If
                 Loop
                 objReader.Dispose()
@@ -189,6 +154,7 @@ Public Class Form1
             Using zip As ZipFile = ZipFile.Read(ziplocation)
                 Dim entry As ZipEntry
                 For Each entry In zip
+
                     entry.Extract(endfile, ExtractExistingFileAction.OverwriteSilently)
                     '' Sleep a little because it's really fast
                     System.Threading.Thread.Sleep(20)
@@ -246,6 +212,46 @@ Public Class Form1
     End Sub
     Private Sub WC_DownloadProgressChanged(ByVal sender As Object, ByVal e As DownloadProgressChangedEventArgs) Handles WC.DownloadProgressChanged
         SubPgB.Value = e.ProgressPercentage
+    End Sub
+    Sub remotedownload(ByVal Location As String, ByVal name As String, ByVal zipsave As String, ByVal saveloc As String, ByVal zipYN As String)
+        Dim rel As Boolean
+        Dim ziploc As String
+        While rel = True
+            Dim run As Short
+            Dim msgboxText As String = "Need to Download: " & name & vbNewLine _
+                                       & "Click OK to download Cancel to abort install" & vbNewLine _
+                                       & "please save in the downloads folder at " & curentLocation & vbNewLine _
+                                       & "this will show up " & run & " more times"
+            Dim msgboxResult As MsgBoxResult
+            msgboxResult = MsgBox(msgboxText, MsgBoxStyle.OkCancel, "file download")
+            If msgboxResult = Microsoft.VisualBasic.MsgBoxResult.Ok Then
+                System.Diagnostics.Process.Start(Location)
+                If IO.File.Exists(curentLocation & "/Downloads/" & name) Then
+                    IO.File.Move(curentLocation & "/Downloads/" & name, zipsave)
+                    If zipYN = "no" Then
+                        rel = False
+                    ElseIf zipYN = "yes" Then
+                        ziploc = tempFiles & saveloc & name
+                        If unzip(ziploc, tempFiles & saveloc) Then
+                            If IO.File.Exists(ziploc) Then
+                                IO.File.Delete(ziploc)
+                            End If
+                        Else
+                            log.Log1.Items.Add("Error in Unziping file " & ziploc)
+                            MsgBox("Could not unZip " & name)
+                        End If
+                        rel = False
+                    End If
+
+                End If
+            Else
+                If run < 4 Then
+                    run += 1
+                Else
+                    Me.Close()
+                End If
+            End If
+        End While
     End Sub
 #End Region
 End Class
