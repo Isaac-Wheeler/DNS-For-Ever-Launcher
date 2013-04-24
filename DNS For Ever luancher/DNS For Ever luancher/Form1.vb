@@ -107,7 +107,9 @@ Public Class Form1
                             End If
                         End If
                     Else
-                        remotedownload(location, name, zipsave, saveloc, zipYN)
+                        If remotedownload(location, name, zipsave, saveloc, zipYN) = False Then
+                            log.Log1.Items.Add("remote download error")
+                        End If
                     End If
                 Loop
                 objReader.Dispose()
@@ -152,11 +154,12 @@ Public Class Form1
     Function unzip(ByVal ziplocation As String, ByVal endfile As String) As Boolean
         Try
             Using zip As ZipFile = ZipFile.Read(ziplocation)
+                SubPgB.Maximum = zip.EntryFileNames.Count
                 Dim entry As ZipEntry
                 For Each entry In zip
-
                     entry.Extract(endfile, ExtractExistingFileAction.OverwriteSilently)
-                    '' Sleep a little because it's really fast
+                    Tasklbl.Text = ExtractExistingFileAction.OverwriteSilently.ToString
+                    SubPgB.Value += 1
                     System.Threading.Thread.Sleep(20)
                 Next
             End Using
@@ -200,21 +203,31 @@ Public Class Form1
         End If
     End Sub
     Sub addToMc()
-        Try
-            Using zip As ZipFile = ZipFile.Read(mcpath & "\bin\minecraft.jar")
-                zip.AddDirectory(tempFiles & "toJar")
-                zip.Save(mcpath & "\bin\minecraft.jar")
-            End Using
-            IO.Directory.Delete(tempFiles & "toJar")
-        Catch ex As Exception
-            log.Log1.Items.Add("Exception in Adding files to minecraft: " & ex.ToString)
-        End Try
+        'temp fix
+        Dim msg As String
+        msg = "please add the files in to Jar to your minecraft.jar file" & vbNewLine _
+            & "Warrning not doing so will make minecraft no load mods"
+        MsgBox(msg)
+        System.Diagnostics.Process.Start(tempFiles & "toJar")
+        System.Diagnostics.Process.Start(mcpath & "\bin")
+        MsgBox("close this msg when done" & vbNewLine & _
+               "please vist http://mage-tech.org/ if you need help")
+        'To Get Working
+        'Try
+        'Using zip As ZipFile = ZipFile.Read(mcpath & "\bin\minecraft.jar")
+        'zip.AddDirectory(tempFiles & "toJar")
+        'zip.Save(mcpath & "\bin\minecraft.jar")
+        'End Using
+        'IO.Directory.Delete(tempFiles & "toJar")
+        'Catch ex As Exception
+        'log.Log1.Items.Add("Exception in Adding files to minecraft: " & ex.ToString)
+        'End Try
     End Sub
-    Private Sub WC_DownloadProgressChanged(ByVal sender As Object, ByVal e As DownloadProgressChangedEventArgs) Handles WC.DownloadProgressChanged
-        SubPgB.Value = e.ProgressPercentage
-    End Sub
-    Sub remotedownload(ByVal Location As String, ByVal name As String, ByVal zipsave As String, ByVal saveloc As String, ByVal zipYN As String)
-        Dim rel As Boolean
+    'Private Sub WC_DownloadProgressChanged(ByVal sender As Object, ByVal e As DownloadProgressChangedEventArgs) Handles WC.DownloadProgressChanged
+    '    SubPgB.Value = e.ProgressPercentage
+    'End Sub
+    Function remotedownload(ByVal Location As String, ByVal name As String, ByVal zipsave As String, ByVal saveloc As String, ByVal zipYN As String)
+        Dim rel As Boolean = True
         Dim ziploc As String
         While rel = True
             Dim run As Short
@@ -226,6 +239,8 @@ Public Class Form1
             msgboxResult = MsgBox(msgboxText, MsgBoxStyle.OkCancel, "file download")
             If msgboxResult = Microsoft.VisualBasic.MsgBoxResult.Ok Then
                 System.Diagnostics.Process.Start(Location)
+                Dim msg As MsgBoxStyle =
+                MsgBox("file downloaded?")
                 If IO.File.Exists(curentLocation & "/Downloads/" & name) Then
                     IO.File.Move(curentLocation & "/Downloads/" & name, zipsave)
                     If zipYN = "no" Then
@@ -241,17 +256,18 @@ Public Class Form1
                             MsgBox("Could not unZip " & name)
                         End If
                         rel = False
+                        Return True
                     End If
-
                 End If
             Else
                 If run < 4 Then
                     run += 1
                 Else
-                    Me.Close()
+                    rel = False
+                    Return False
                 End If
             End If
         End While
-    End Sub
+    End Function
 #End Region
 End Class
